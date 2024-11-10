@@ -1,5 +1,6 @@
 package com.blazing.vault.database.model.item.rent;
 
+import com.blazing.vault.database.model.item.DItem;
 import com.blazing.vault.util.emerald.Emeralds;
 import io.ebean.Model;
 import java.sql.Timestamp;
@@ -7,6 +8,7 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,6 +17,8 @@ public class DRentingPrice extends Model {
 
     @Id
     private UUID id;
+    @ManyToOne
+    private DItem item;
     @Column(nullable = false)
     private Timestamp fromDate;
     @Column

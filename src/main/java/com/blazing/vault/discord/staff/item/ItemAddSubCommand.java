@@ -83,11 +83,12 @@ public class ItemAddSubCommand extends BaseStaffSubCommand {
     public SubcommandData getData() {
         SubcommandData command = new SubcommandData("create", "Create and add an item to the vault");
         command.addOption(OptionType.STRING, "name", "The name of the item", true);
-        command.addOption(OptionType.STRING, "description", "Any description of the item");
 
         CommandOptionList.of(
             List.of(CommandOption.PRICE, CommandOption.ITEM_IMAGE)
         ).addToCommand(command);
+
+        command.addOption(OptionType.STRING, "description", "Any description of the item");
 
         return command;
     }
