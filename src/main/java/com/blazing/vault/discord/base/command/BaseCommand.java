@@ -32,5 +32,6 @@ public abstract class BaseCommand extends DCFSlashCommand implements CommandChec
         return isOnlyManager;
     }
 
-    protected abstract void onCheckedCommand(SlashCommandInteractionEvent event);
+    protected void onCheckedCommand(SlashCommandInteractionEvent event) {
+    }
 }

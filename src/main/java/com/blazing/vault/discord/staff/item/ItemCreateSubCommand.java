@@ -4,6 +4,7 @@ import com.blazing.vault.database.model.entity.client.DClient;
 import com.blazing.vault.database.model.entity.staff.DStaffConductor;
 import com.blazing.vault.database.model.item.DItem;
 import com.blazing.vault.database.model.item.ItemApi;
+import com.blazing.vault.database.model.item.ItemStatus;
 import com.blazing.vault.discord.base.command.option.CommandOption;
 import com.blazing.vault.discord.base.command.option.CommandOptionList;
 import com.blazing.vault.discord.base.command.staff.BaseStaffSubCommand;
@@ -23,11 +24,11 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemAddSubCommand extends BaseStaffSubCommand {
+public class ItemCreateSubCommand extends BaseStaffSubCommand {
 
     @Override
     protected void onStaffCommand(SlashCommandInteractionEvent event, DStaffConductor staff) {
-        DClient owner = CommandOption.CLIENT.getRequired(event);
+        DClient owner = CommandOption.OWNER.getRequired(event);
         if (owner == null) return;
         Emeralds price = CommandOption.PRICE.getRequired(event);
         if (price == null) return;
@@ -37,7 +38,7 @@ public class ItemAddSubCommand extends BaseStaffSubCommand {
         if (name == null) return;
         @Nullable String description = event.getOption("description", OptionMapping::getAsString);
 
-        if (attachment.isImage()) {
+        if (!attachment.isImage()) {
             replyError(event, "Attachment is not a valid image");
             return;
         }
@@ -49,7 +50,8 @@ public class ItemAddSubCommand extends BaseStaffSubCommand {
         }
         CompletableFuture<File> downloadAction = attachment.getProxy().downloadToFile(tempFile);
         String extension = attachment.getFileExtension();
-        Function<File, DItem> createItem = image -> ItemApi.createItem(owner, name, extension, description, price, image);
+        Function<File, DItem> createItem = image -> ItemApi.createItem(owner, name, extension, description,
+            ItemStatus.IN_VAULT, price, image);
         event.deferReply().queue(
             defer -> onDefer(defer, downloadAction, createItem, owner, name)
         );
@@ -65,6 +67,7 @@ public class ItemAddSubCommand extends BaseStaffSubCommand {
                 }
                 createItem.apply(image);
                 String msg = "Successfully added item %s's %s".formatted(owner.getEffectiveName(), name);
+                System.out.println(msg);
                 MessageEmbed embed = success()
                     .appendDescription(msg)
                     .build();
@@ -85,7 +88,7 @@ public class ItemAddSubCommand extends BaseStaffSubCommand {
         command.addOption(OptionType.STRING, "name", "The name of the item", true);
 
         CommandOptionList.of(
-            List.of(CommandOption.PRICE, CommandOption.ITEM_IMAGE)
+            List.of(CommandOption.OWNER, CommandOption.PRICE, CommandOption.ITEM_IMAGE)
         ).addToCommand(command);
 
         command.addOption(OptionType.STRING, "description", "Any description of the item");

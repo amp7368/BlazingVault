@@ -6,6 +6,8 @@ import com.blazing.vault.config.discord.DiscordConfig;
 import com.blazing.vault.config.discord.DiscordPermissions;
 import com.blazing.vault.discord.base.command.BaseCommand;
 import com.blazing.vault.discord.base.command.BaseSubCommand;
+import com.blazing.vault.discord.misc.autocomplete.AutoCompleteListener;
+import com.blazing.vault.discord.request.RequestCommand;
 import com.blazing.vault.discord.staff.item.ItemCommand;
 import com.blazing.vault.discord.system.help.HelpCommandListManager;
 import com.blazing.vault.discord.system.log.DiscordLogService;
@@ -25,10 +27,8 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.jetbrains.annotations.NotNull;
 
 public class DiscordModule extends AppleModule {
 
@@ -40,7 +40,6 @@ public class DiscordModule extends AppleModule {
         .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
         .toFormatter()
         .withZone(DiscordModule.TIME_ZONE);
-    public static final String DISCORD_INVITE_LINK = "https://discord.gg/tEAy2dGXWF";
 
     private static DiscordModule instance;
 
@@ -51,12 +50,6 @@ public class DiscordModule extends AppleModule {
     public static DiscordModule get() {
         return instance;
     }
-
-    @NotNull
-    public static Button inviteButton() {
-        return Button.link(DISCORD_INVITE_LINK, "Blazing Discord Server");
-    }
-
 
     @Override
     public void onLoad() {
@@ -84,9 +77,11 @@ public class DiscordModule extends AppleModule {
         DCF dcf = new DCF(jda);
         DiscordBot.ready(dcf);
 
+        jda.addEventListener(new AutoCompleteListener());
         DCFCommandManager commands = dcf.commands();
 
         commands.addCommand(new ItemCommand());
+        commands.addCommand(new RequestCommand());
     }
 
     @Override

@@ -13,11 +13,11 @@ import org.jetbrains.annotations.Nullable;
 
 public interface ItemApi {
 
-    static DItem createItem(DClient owner, String name, String extension, @Nullable String description, Emeralds price,
-        File imageFile) {
+    static DItem createItem(DClient owner, String name, String extension, @Nullable String description,
+        ItemStatus status, Emeralds price, File imageFile) {
         DRentingPrice rentingPrice = new DRentingPrice(price);
         DImage image = new DImage(imageFile, name, extension);
-        DItem item = new DItem(owner, name, description, rentingPrice, image);
+        DItem item = new DItem(owner, name, description, status, rentingPrice, image);
 
         try (Transaction transaction = DB.beginTransaction()) {
             rentingPrice.save(transaction);

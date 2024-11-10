@@ -23,20 +23,18 @@ import org.jetbrains.annotations.Nullable;
 public interface CommandOption<R> {
 
     // client
-    CommandOptionMulti<String, DClient> CLIENT = multi("client", "Client associated with this action", OptionType.STRING,
-        OptionMapping::getAsString, ClientQueryApi::findByName).setAutocomplete();
+    CommandOptionMulti<String, DClient> CLIENT = client("client");
+    CommandOptionMulti<String, DClient> OWNER = client("owner");
     CommandOption<Member> DISCORD = basic("discord", "The discord of the client", OptionType.MENTIONABLE,
         OptionMapping::getAsMember);
     CommandOption<String> MINECRAFT = basic("minecraft", "Your minecraft username", OptionType.STRING,
         OptionMapping::getAsString);
     CommandOption<String> DISPLAY_NAME = basic("display_name", "The name to display on the profile", OptionType.STRING,
         OptionMapping::getAsString);
-
     // common
     CommandOptionDate DATE = new CommandOptionDate();
     CommandOptionDate LOAN_START_DATE = new CommandOptionDate("start_date",
         "The start date (MM/DD/YY) for the loan. (Defaults to current date if not specified)");
-
     // request
 //    CommandOptionMulti<Long, DCFStoredGui<?>> REQUEST = multi("request_id", "The id of the request", OptionType.INTEGER,
 //        OptionMapping::getAsLong, ActiveRequestDatabase.get()::getRequest);
@@ -44,17 +42,20 @@ public interface CommandOption<R> {
         OptionType.ATTACHMENT, OptionMapping::getAsAttachment);
     CommandOption<Attachment> ITEM_IMAGE = basic("image", "Image of the item",
         OptionType.ATTACHMENT, OptionMapping::getAsAttachment);
-
     // help
     CommandOptionMulti<String, HelpCommandListType> HELP_LIST_TYPE = new CommandOptionMapEnum<>("help_list", "The type of help list",
         HelpCommandListType.class, HelpCommandListType.values());
-    CommandOptionMulti<String, Emeralds> PRICE = CommandOption.emeraldsAmount("rent per week");
+    CommandOptionMulti<String, Emeralds> PRICE = CommandOption.emeraldsAmount("price", "Cost to rent per week");
 
+    static CommandOptionMulti<String, DClient> client(String name) {
+        return multi(name.toLowerCase(), "%s associated with this action".formatted(name), OptionType.STRING,
+            OptionMapping::getAsString, ClientQueryApi::findByName).setAutocomplete();
+    }
 
     @NotNull
-    static CommandOptionMulti<String, Emeralds> emeraldsAmount(String type) {
+    static CommandOptionMulti<String, Emeralds> emeraldsAmount(String name, String type) {
         String desc = "The amount to %s. %s".formatted(type, ErrorMessages.emeraldsFormat());
-        return new CommandOptionEmeralds("amount", desc, OptionType.STRING);
+        return new CommandOptionEmeralds(name, desc, OptionType.STRING);
     }
 
 

@@ -19,10 +19,10 @@ import javax.persistence.Table;
 @Table(name = "item")
 public class DItem extends Model {
 
-    @ManyToOne
-    private final DClient owner;
     @Id
     private long id;
+    @ManyToOne
+    private DClient owner;
     @Column(nullable = false)
     private ItemStatus status;
     @Column(nullable = false)
@@ -36,12 +36,13 @@ public class DItem extends Model {
     @OneToMany
     private List<DRentingPrice> prices = new ArrayList<>();
 
-    public DItem(DClient owner, String name, String description, DRentingPrice price, DImage image) {
+    public DItem(DClient owner, String name, String description, ItemStatus status, DRentingPrice price, DImage image) {
         this.owner = owner;
         this.name = name;
         this.description = description;
-        this.image = image;
+        this.status = status;
         this.prices.add(price);
+        this.image = image;
     }
 
     public void setStatus(ItemStatus status) {

@@ -14,6 +14,7 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.local.LocalBucket;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.time.Duration;
@@ -103,12 +104,11 @@ public class UpdateClientMinecraftHook {
 
     private static @Nullable ClientMinecraftDetails readMinecraftDetails(Object minecraftInput, String url) {
         throttleSelf();
-        try {
-            BufferedReader urlInput = new BufferedReader(new InputStreamReader(URI.create(url).toURL().openStream()));
+        try (InputStream in = URI.create(url).toURL().openStream()) {
+            BufferedReader urlInput = new BufferedReader(new InputStreamReader(in));
             JsonObject obj = new Gson().fromJson(urlInput, JsonObject.class);
             String uuidRaw = obj.get("id").getAsString();
             String username = obj.get("name").getAsString();
-            urlInput.close();
             return ClientMinecraftDetails.fromRaw(toUUID(uuidRaw), username);
         } catch (IOException e) {
             DatabaseModule.get().logger().warn("Could not load minecraft {}", minecraftInput);

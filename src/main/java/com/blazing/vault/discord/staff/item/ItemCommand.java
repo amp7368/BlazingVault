@@ -10,7 +10,7 @@ public class ItemCommand extends BaseStaffCommand {
 
     @Override
     public List<DCFSlashSubCommand> getSubCommands() {
-        return List.of(new ItemAddSubCommand());
+        return List.of(new ItemCreateSubCommand());
     }
 
     @Override
