@@ -66,7 +66,7 @@ public class ItemCreateSubCommand extends BaseStaffSubCommand {
                     return;
                 }
                 createItem.apply(image);
-                String msg = "Successfully added item %s's %s".formatted(owner.getEffectiveName(), name);
+                String msg = "Successfully added @%s's item: **%s**".formatted(owner.getEffectiveName(), name);
                 System.out.println(msg);
                 MessageEmbed embed = success()
                     .appendDescription(msg)
