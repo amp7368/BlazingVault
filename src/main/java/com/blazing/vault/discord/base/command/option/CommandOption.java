@@ -10,6 +10,7 @@ import com.blazing.vault.util.theme.BlazingMessages.ErrorMessages;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.interactions.commands.Command.Choice;
 import net.dv8tion.jda.api.interactions.commands.CommandInteraction;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -39,10 +40,15 @@ public interface CommandOption<R> {
     // request
 //    CommandOptionMulti<Long, DCFStoredGui<?>> REQUEST = multi("request_id", "The id of the request", OptionType.INTEGER,
 //        OptionMapping::getAsLong, ActiveRequestDatabase.get()::getRequest);
+    CommandOption<Attachment> LOAN_COLLATERAL_IMAGE = basic("image", "Image of the collateral to add to the request",
+        OptionType.ATTACHMENT, OptionMapping::getAsAttachment);
+    CommandOption<Attachment> ITEM_IMAGE = basic("image", "Image of the item",
+        OptionType.ATTACHMENT, OptionMapping::getAsAttachment);
 
     // help
     CommandOptionMulti<String, HelpCommandListType> HELP_LIST_TYPE = new CommandOptionMapEnum<>("help_list", "The type of help list",
         HelpCommandListType.class, HelpCommandListType.values());
+    CommandOptionMulti<String, Emeralds> PRICE = CommandOption.emeraldsAmount("rent per week");
 
 
     @NotNull

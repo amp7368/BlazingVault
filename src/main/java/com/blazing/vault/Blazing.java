@@ -2,6 +2,9 @@ package com.blazing.vault;
 
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.ApplePlugin;
+import apple.lib.modules.configs.factory.AppleConfigLike;
+import com.blazing.vault.config.BlazingConfig;
+import com.blazing.vault.config.BlazingStaffConfig;
 import com.blazing.vault.database.DatabaseModule;
 import com.blazing.vault.discord.DiscordModule;
 import java.util.List;
@@ -55,5 +58,13 @@ public class Blazing extends ApplePlugin {
     @Override
     public List<AppleModule> createModules() {
         return List.of(new DiscordModule(), new DatabaseModule());
+    }
+
+    @Override
+    public List<AppleConfigLike> getConfigs() {
+        return List.of(
+            configJson(BlazingConfig.class, "BlazingConfig").setPretty(),
+            configJson(BlazingStaffConfig.class, "BlazingStaffConfig").setPretty()
+        );
     }
 }

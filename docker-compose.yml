@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  app:
+    restart: unless-stopped
+    container_name: ${COMPOSE_NAME}.${IMAGE_NAME}
+    image: ${COMPOSE_NAME}/${IMAGE_NAME}
+    build:
+      context: .
+      args:
+        - JAVA_VERSION=${JAVA_VERSION}
+        - JAR_FILE=${JAR_FILE}
+        - WORKINGDIR=${WORKINGDIR}
+    environment:
+      - JAR_FILE=${JAR_FILE}
+      - WORKINGDIR=${WORKINGDIR}
+    depends_on:
+      - postgres
+    volumes:
+      - '${MOUNT_DIR}/${IMAGE_NAME}:${WORKINGDIR}'
+      - '/dev/urandom:/dev/random'
+  postgres:
+    restart: unless-stopped
+    image: ${POSTGRES_VERSION}
+    container_name: ${COMPOSE_NAME}.${DATABASE_IMAGE}
+    env_file: '.env'
+    volumes:
+      - '${SECRETS_DIR}/Database:/secrets'
+      - '${MOUNT_DIR}/postgres:/var/lib/postgresql/data'

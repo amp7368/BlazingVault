@@ -4,6 +4,7 @@ import apple.lib.ebean.database.AppleEbeanDatabaseMetaConfig;
 import apple.lib.modules.AppleModule;
 import apple.lib.modules.configs.factory.AppleConfigLike;
 import com.blazing.vault.Blazing;
+import com.blazing.vault.database.BlazingDatabase.BlazingDatabaseConfig;
 import com.blazing.vault.database.system.InitDatabase;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class DatabaseModule extends AppleModule {
 
     @Override
     public List<AppleConfigLike> getConfigs() {
-        return List.of(configJson(BlazingDatabase.class, "DatabaseConfig"));
+        return List.of(configJson(BlazingDatabaseConfig.class, "DatabaseConfig"));
     }
 
     @Override

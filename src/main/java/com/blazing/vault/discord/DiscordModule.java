@@ -6,6 +6,7 @@ import com.blazing.vault.config.discord.DiscordConfig;
 import com.blazing.vault.config.discord.DiscordPermissions;
 import com.blazing.vault.discord.base.command.BaseCommand;
 import com.blazing.vault.discord.base.command.BaseSubCommand;
+import com.blazing.vault.discord.staff.item.ItemCommand;
 import com.blazing.vault.discord.system.help.HelpCommandListManager;
 import com.blazing.vault.discord.system.log.DiscordLogService;
 import discord.util.dcf.DCF;
@@ -85,6 +86,7 @@ public class DiscordModule extends AppleModule {
 
         DCFCommandManager commands = dcf.commands();
 
+        commands.addCommand(new ItemCommand());
     }
 
     @Override
